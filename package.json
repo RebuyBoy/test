@@ -2,9 +2,9 @@
     "name": "ws_task",
     "version": "1.0.0",
     "description": "Template for the WebSocket remote control task",
-    "main": "index.ts",
+    "main": "Application.ts",
     "scripts": {
-        "start": "node index.ts",
+        "start": "node Application.ts",
         "start:dev": "nodemon index",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
@@ -15,7 +15,8 @@
         "@types/ws": "^8.5.3",
         "node-gyp": "^9.0.0",
         "nodemon": "^2.0.16",
-        "ts": "^0.2.2"
+        "ts": "^0.2.2",
+        "ts-node": "^10.8.1"
     },
     "dependencies": {
         "jimp": "^0.16.1",
