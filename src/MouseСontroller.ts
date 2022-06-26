@@ -1,16 +1,17 @@
 import robot from "robotjs";
 
-class MouseControl {
+class MouseController {
 
-    public drawRectangle(width: number, length: number) {
-        const {x, y} = robot.getMousePos();
+    public drawRectangle(length: number, width: number) {
+        let {x, y} = robot.getMousePos();
         robot.mouseClick("left");
         robot.mouseToggle('down', 'left');
 
-        this.drawLineRight(width, x, y)
-        this.drawLineDown(length, x + width, y)
-        this.drawLineLeft(width, x + width, y + length)
-        this.drawLineUp(length, x, y + length)
+        this.drawLine(width, x, y, "right")
+        // x += width;
+        this.drawLine(length, x + width, y, "down");
+        this.drawLine(width, x + width, y + length, "left")
+        this.drawLine(length, x, y + length, "up");
         robot.mouseToggle('up', 'left');
     }
 
@@ -27,29 +28,22 @@ class MouseControl {
         robot.mouseToggle('up');
     }
 
-    private drawLineRight(width: number, x, y) {
-        for (let i = 0; i <= width; i++) {
-            robot.dragMouse(x + i, y);
-        }
-    }
-
-    private drawLineDown(length: number, x, y) {
-        for (let i = 0; i <= length; i++) {
-            robot.dragMouse(x, y + i);
-        }
-    }
-
-    private drawLineLeft(width: number, x, y) {
-        for (let i = 0; i <= width; i++) {
-            robot.dragMouse(x - i, y);
-        }
-    }
-
-    private drawLineUp(length: number, x, y) {
-        for (let i = 0; i <= length; i++) {
-            robot.dragMouse(x, y - i);
+    private drawLine(length: number, x: number, y: number, direction: string) {
+        for (let i = 0; i < length; i++) {
+            if (direction === "right") {
+                robot.dragMouse(x + i, y);
+            }
+            if (direction === "down") {
+                robot.dragMouse(x, y + i);
+            }
+            if (direction === "left") {
+                robot.dragMouse(x - i, y);
+            }
+            if (direction === "up") {
+                robot.dragMouse(x, y - i);
+            }
         }
     }
 }
 
-export default new MouseControl();
+export default new MouseController();

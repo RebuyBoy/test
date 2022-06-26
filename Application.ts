@@ -1,4 +1,8 @@
-import {run} from "./src/websocket";
+import httpServer from "./src/servers/AppHttpServer";
+import webSocketServer from "./src/servers/AppWebSocketServer";
+import {config} from "dotenv";
 
-run()
+config();
+httpServer.run()
+webSocketServer.run();
 
