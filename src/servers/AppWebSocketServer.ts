@@ -16,22 +16,29 @@ class AppWebsocketServer {
             console.log("websocket started\n", data);
         });
         wss.on('connection', function connection(ws) {
-            const duplex = createWebSocketStream(ws, {
-                encoding: 'utf8',
-            });
-            duplex.on('readable', function message() {
-                let data = '', chunk = '';
-                while (chunk !== null) {
-                    data += chunk;
-                    chunk = duplex.read();
-                }
-                messageHandler.handle(data, duplex);
-            });
-            ws.on('close', () => {
-                console.log("websocket closed");
-                duplex.destroy();
-            });
+            try {
+                const duplex = createWebSocketStream(ws,
+                    {
+                        encoding: 'utf8',
+                        decodeStrings: false,
+                    }
+                );
+                duplex.on('readable', function message() {
+                    let data = '', chunk = '';
+                    while (chunk !== null) {
+                        data += chunk;
+                        chunk = duplex.read();
+                    }
+                    messageHandler.handle(data, duplex);
+                });
+                ws.on('close', () => {
+                    console.log("websocket closed");
+                    duplex.destroy();
+                });
 
+            } catch (err) {
+                console.log(err);
+            }
         });
     }
 

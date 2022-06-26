@@ -60,12 +60,11 @@ class ClientMessageHandler {
                 duplex.write(command + "\0", "utf8");
             }
             if (command) {
-                console.log(command, "done")
+                console.log(data, "done")
             }
         } catch (err) {
             console.log(command, "fail")
         }
-
     }
 
     public parseArgs(data: string) {
