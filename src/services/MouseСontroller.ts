@@ -8,7 +8,6 @@ class MouseController {
         robot.mouseToggle('down', 'left');
 
         this.drawLine(width, x, y, "right")
-        // x += width;
         this.drawLine(length, x + width, y, "down");
         this.drawLine(width, x + width, y + length, "left")
         this.drawLine(length, x, y + length, "up");

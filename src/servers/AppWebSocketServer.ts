@@ -5,11 +5,19 @@ class AppWebsocketServer {
     public run() {
         const port = this.getPort();
         const wss = new WebSocketServer({port: port});
-        console.log(`websocket server started on port: ${port}`);
+        this.setupWss(wss, port);
+        process.on("SIGINT", () => process.exit());
+        process.on("exit", () => this.shutdown(wss));
+    }
+
+    private setupWss(wss: WebSocketServer, port: number) {
+        wss.on('listening', () => console.log(`websocket server started on port: ${port}`));
+        wss.on('headers', (data) => {
+            console.log("websocket started\n", data);
+        });
         wss.on('connection', function connection(ws) {
             const duplex = createWebSocketStream(ws, {
                 encoding: 'utf8',
-                decodeStrings: false,
             });
             duplex.on('readable', function message() {
                 let data = '', chunk = '';
@@ -19,10 +27,12 @@ class AppWebsocketServer {
                 }
                 messageHandler.handle(data, duplex);
             });
+            ws.on('close', () => {
+                console.log("websocket closed");
+                duplex.destroy();
+            });
+
         });
-        console.log("new websocket connection");
-        process.on("SIGINT", () => process.exit());
-        process.on("exit", () => this.shutdown(wss));
     }
 
     private shutdown(wss: WebSocketServer) {

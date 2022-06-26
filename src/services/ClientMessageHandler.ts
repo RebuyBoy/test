@@ -11,9 +11,13 @@ class ClientMessageHandler {
 
         try {
             const {x: cursorPositionX, y: cursorPositionY} = robot.getMousePos();
+            const {width: screenWidth, height: screenHeight} = robot.getScreenSize();
 
             if (command.startsWith("mouse_right")) {
-                robot.moveMouseSmooth(cursorPositionX + width, cursorPositionY);
+                if (cursorPositionX < screenWidth) {
+                    const newPositionX = cursorPositionX + width < screenWidth ? cursorPositionX + width : screenWidth
+                    robot.moveMouseSmooth(newPositionX, cursorPositionY);
+                }
             }
             if (command === "mouse_left") {
                 if (cursorPositionX > 0) {
@@ -22,10 +26,16 @@ class ClientMessageHandler {
                 }
             }
             if (command === "mouse_up") {
-                robot.moveMouseSmooth(cursorPositionX, cursorPositionY - width);
+                if (cursorPositionY > 0) {
+                    const newPositionY = cursorPositionY - width > 0 ? cursorPositionY - width : 0
+                    robot.moveMouseSmooth(cursorPositionX, newPositionY);
+                }
             }
             if (command === "mouse_down") {
-                robot.moveMouseSmooth(cursorPositionX, cursorPositionY + width);
+                if (cursorPositionY < screenHeight) {
+                    const newPositionY = cursorPositionY + width < screenHeight ? cursorPositionY + width : screenHeight
+                    robot.moveMouseSmooth(cursorPositionX, newPositionY);
+                }
             }
             if (command === "mouse_position") {
                 duplex.write(`mouse_position ${cursorPositionX},${cursorPositionY}\0`);
@@ -47,9 +57,11 @@ class ClientMessageHandler {
                     });
             }
             if (!["mouse_position", "prnt_scrn"].includes(command)) {
-                duplex.write(command + "\0");
+                duplex.write(command + "\0", "utf8");
             }
-            console.log(command, "done")
+            if (command) {
+                console.log(command, "done")
+            }
         } catch (err) {
             console.log(command, "fail")
         }
