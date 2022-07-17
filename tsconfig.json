@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "es5",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "removeComments": true,
+    "rootDir": "./src/",
+    "outDir": "./build"
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}
